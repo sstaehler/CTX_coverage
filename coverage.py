@@ -40,11 +40,10 @@ class Coverage:
         in_circle = circle.contains(self.shapefile["geometry"])
         self.shape_reduced = self.shapefile[in_circle]
 
-    def in_annulus(self, radius_outer_km, radius_inner_km, geodataframe=None):
-        if geodataframe is None:
-            geodataframe = self.shape_reduced
+    def in_annulus(self, radius_outer_km, radius_inner_km, time='1900-01-01'):
+        images_in_time = self.shape_reduced.loc[self.shape_reduced["date"] > time]
         # in_distance = self.annulus(radius_outer_km, radius_inner_km).contains(geodataframe["geometry"])
-        in_distance = geodataframe.intersection(other=self.annulus(radius_outer_km, radius_inner_km))
+        in_distance = images_in_time.intersection(other=self.annulus(radius_outer_km, radius_inner_km))
         return in_distance # geodataframe[in_distance]
 
     def area_images_in_annulus(self, radius_outer_km, radius_inner_km):
